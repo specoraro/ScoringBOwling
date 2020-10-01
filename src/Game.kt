@@ -1,13 +1,15 @@
-import java.util.*
-import kotlin.collections.ArrayList
-
 
 class Game() {
-    val SIZE=5
-    var frames: Array<Frame?> = arrayOfNulls<Frame>(SIZE)
+    val SIZE=10
+    var frames: Array<Frame?> = arrayOfNulls<Frame>(SIZE) // array per contenere i 10 frames per ciascun gioco
     var frameIndex: Int = 0
 
     fun score():Int{
+        /**
+         * il metodo score, una volta che sono stati giocati tutti i frames
+         * attraversa con un ciclo for l'intero array e somma i risultati parziali di ogni frame
+         * e lo ritorna
+         */
         var score=0
         for(i in frames.indices){
             this.frameScore(i)
@@ -18,7 +20,7 @@ class Game() {
     }
 
     fun startGame(){
-        println("Do you want to start a new game?")
+        println("Do you want to start a new game?\nInsert for each roll in frame the number of pins knocked down")
         while(this.frameIndex<=SIZE-1){
             println("-----------" +
                     "| FRAME ${this.frameIndex+1} |" +
