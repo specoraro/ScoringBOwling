@@ -25,16 +25,28 @@ class Game() {
         /**
          * il metodo startGame è il motore del gioco, interagisce e riceve gli input dall'utente
          */
-        println("Do you want to start a new game?\nInsert for each roll in frame the number of pins knocked down")
+        println("Do you want to start a new game?\nInsert for each roll in frame the number of pins knocked down\n"+
+                " - insert 10 for strikes\n"+"" +
+                " - insert the number of pins knocked down for each roll of Spare")
         while(this.frameIndex<=SIZE-1){
             println("-----------" +
                     "| FRAME ${this.frameIndex+1} |" +
                     "-----------\n"+"first roll? ")
-            var f:Int=roll(readLine()!!.toInt())
+            var firstRoll=readLine()
+            while(firstRoll.isNullOrEmpty() || firstRoll.toInt()>10) {
+                println("insert valid element")
+                firstRoll= readLine()
+            }
+            var f:Int=roll(firstRoll!!.toInt())
             var s:Int
             if(f==10) {s=roll(0)}
             else{
                 println("second roll? ")
+                var secondRoll= readLine()
+                while(secondRoll.isNullOrEmpty() || secondRoll.toInt()>10) {
+                    println("insert valid element")
+                    secondRoll= readLine()
+                }
                 s=roll(readLine()!!.toInt())
             }
             var frame: Frame=Frame(f,s)
@@ -89,9 +101,8 @@ class Game() {
                 }
             } else if(index==SIZE-2){//valutazione per nel caso il penultimo frame sia uno strike
                 if (frames[index + 1]!!.isStrike()) {
-                    println("SONO UNO STRIKE")
                     flag=true
-                    println("$flag")
+
                 } else {
                     frame.frameScore = 10 + frames[index + 1]!!.firstRoll + frames[index + 1]!!.secondRoll
                 }
@@ -108,7 +119,7 @@ class Game() {
                 }
                 else if(flag){
                     frame.frameScore = 20+10 + (2*extra1) + extra2//il 20 e il fattore moltiplicativo 2 sono per tener conto dello strike al penultimo frame
-                    println("$extra1 efeefefefe")
+
                 }
             }
 
