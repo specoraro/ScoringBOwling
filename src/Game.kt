@@ -14,12 +14,14 @@ class Game() {
         for(i in frames.indices){
             this.frameScore(i)
             score += frames[i]!!.frameScore
-
         }
         return score
     }
 
     fun startGame(){
+        /**
+         * il metodo startGame è il motore del gioco, interagisce e riceve gli input dall'utente
+         */
         println("Do you want to start a new game?\nInsert for each roll in frame the number of pins knocked down")
         while(this.frameIndex<=SIZE-1){
             println("-----------" +
@@ -34,10 +36,14 @@ class Game() {
             }
             var frame: Frame=Frame(f,s)
             this.addFrame(frame)
+
         }
 
     }
     fun addFrame(frame: Frame){
+        /**
+         * memorizza il frame creato nel metodo startGame nell'array di frames dedicato al gane
+         */
         if(frameIndex<SIZE) {
             frames[frameIndex] = frame
             frameIndex++
@@ -45,37 +51,46 @@ class Game() {
 
     }
     fun roll( pins: Int): Int {
+        /**
+         * indica quanti birilli vengono buttati giù con un tiro
+         */
         var currentRoll=pins
         return currentRoll
     }
+
     fun frameScore(index:Int){
-        val frame=frames[index]!!
+        /**
+         * il metodo frameScore si occupa di valutare lo score di ogni frame, tenendo conto anche di eventuali
+         * bonus derivati da strikes e spares e dipendenti da frames successivi
+         */
+        val frame=frames[index]!! // l'asserzione di non-null è derivata dal fatto che frameScore() è chiamata sicuramente su frame giocati e quindi notNUll
         val rollScore= frame.firstRoll+frame.secondRoll //punteggio derivato dai soli tiri
 
         //controlli per assegnamento dei punti extra
-        if(rollScore!=10) frame.frameScore= rollScore
-        if(frame.isSpare()){
-            if (index==SIZE-1){
+        if(rollScore!=10) frame.frameScore= rollScore//non sono stati eseguiti nè strikes nè spares
+        if (frame.isSpare()) {
+            if (index != SIZE-1) {
+                frame.frameScore = 10 + frames[index + 1]!!.firstRoll
+            } else { // condizione per il decimo frame
                 println("Extra roll for Spare!! --> ")
                 val extra= readLine()!!.toInt()
                 frame.frameScore=10+extra
-            }else {
-                frame.frameScore = 10 + frames[index + 1]!!.firstRoll
             }
         }
         if(frame.isStrike()) {
-            if (index == SIZE-1) {
+            if (index != SIZE-1) {
+                if (frames[index + 1]!!.isStrike()) {
+                    frame.frameScore = 10 + 10 + frames[index + 2]!!.firstRoll
+                } else {
+                    frame.frameScore = 10 + frames[index + 1]!!.firstRoll + frames[index + 1]!!.secondRoll
+                }
+            } else {// condizione per il decimo frame
                 println("Extra roll1 for Strike!! --> ")
                 val extra1 = readLine()!!.toInt()
                 println("Extra roll2 for Strike!! --> ")
                 val extra2 = readLine()!!.toInt()
                 frame.frameScore = 10 + extra1 + extra2
             }
-            else if (frames[index + 1]!!.isStrike()) {
-                    frame.frameScore = 10 + 10 + frames[index + 2]!!.firstRoll
-                } else {
-                    frame.frameScore = 10 + frames[index + 1]!!.firstRoll + frames[index + 1]!!.secondRoll
-                }
 
         }
 
