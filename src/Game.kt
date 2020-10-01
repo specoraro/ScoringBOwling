@@ -3,6 +3,7 @@ class Game() {
     val SIZE=10
     var frames: Array<Frame?> = arrayOfNulls<Frame>(SIZE) // array per contenere i 10 frames per ciascun gioco
     var frameIndex: Int = 0
+    var flag:Boolean=false
 
     fun score():Int{
         /**
@@ -15,6 +16,8 @@ class Game() {
             this.frameScore(i)
             score += frames[i]!!.frameScore
         }
+
+
         return score
     }
 
@@ -78,18 +81,35 @@ class Game() {
             }
         }
         if(frame.isStrike()) {
-            if (index != SIZE-1) {
+            if (index < SIZE-2) {
                 if (frames[index + 1]!!.isStrike()) {
                     frame.frameScore = 10 + 10 + frames[index + 2]!!.firstRoll
                 } else {
                     frame.frameScore = 10 + frames[index + 1]!!.firstRoll + frames[index + 1]!!.secondRoll
                 }
-            } else {// condizione per il decimo frame
+            } else if(index==SIZE-2){//valutazione per nel caso il penultimo frame sia uno strike
+                if (frames[index + 1]!!.isStrike()) {
+                    println("SONO UNO STRIKE")
+                    flag=true
+                    println("$flag")
+                } else {
+                    frame.frameScore = 10 + frames[index + 1]!!.firstRoll + frames[index + 1]!!.secondRoll
+                }
+
+
+            }
+            else {// condizione per il decimo frame
                 println("Extra roll1 for Strike!! --> ")
                 val extra1 = readLine()!!.toInt()
                 println("Extra roll2 for Strike!! --> ")
                 val extra2 = readLine()!!.toInt()
-                frame.frameScore = 10 + extra1 + extra2
+                if(!flag) {
+                    frame.frameScore = 10 + extra1 + extra2
+                }
+                else if(flag){
+                    frame.frameScore = 20+10 + (2*extra1) + extra2//il 20 e il fattore moltiplicativo 2 sono per tener conto dello strike al penultimo frame
+                    println("$extra1 efeefefefe")
+                }
             }
 
         }
