@@ -44,10 +44,10 @@ class Game() {
                 println("second roll? ")
                 var secondRoll= readLine()
                 while(secondRoll.isNullOrEmpty() || secondRoll.toInt()>10) {
-                    println("insert valid element")
-                    secondRoll= readLine()
+                   println("insert valid element")
+                   secondRoll= readLine()
                 }
-                s=roll(readLine()!!.toInt())
+                s=roll(secondRoll!!.toInt())
             }
             var frame: Frame=Frame(f,s)
             this.addFrame(frame)
